@@ -8,7 +8,6 @@
     "scheme": "ecoguard",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "resizeMode": "contain",
       "backgroundColor": "#030a12"
     },
     "ios": {
@@ -23,6 +22,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-av",
       [
         "expo-font",
         {
@@ -37,9 +37,11 @@
     "extra": {
       "apiUrl": "http://localhost:8000",
       "wsUrl": "ws://localhost:8000",
+      "router": {},
       "eas": {
-        "projectId": "ecoguard-pipeline"
+        "projectId": "0fbfcdaa-aa9e-4b0a-9752-44889e5d9a2f"
       }
-    }
+    },
+    "owner": "oggskimmer"
   }
 }

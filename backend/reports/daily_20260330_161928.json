@@ -1,0 +1,78 @@
+{
+  "report_type": "DAILY",
+  "generated_at": "2026-03-30T16:19:28.209700+00:00",
+  "time_range_start": "2026-03-29T16:19:28.209700+00:00",
+  "time_range_end": "2026-03-30T16:19:28.209700+00:00",
+  "data": {
+    "sensors": {
+      "PS-001": {
+        "count": 15018,
+        "mean": 97.254,
+        "std": 7.454,
+        "min": 67.327,
+        "max": 106.128,
+        "anomaly_count": 610,
+        "anomaly_rate": 4.06,
+        "uptime_percent": 100.0
+      },
+      "FS-002": {
+        "count": 15016,
+        "mean": 197.325,
+        "std": 11.705,
+        "min": 132.983,
+        "max": 211.098,
+        "anomaly_count": 483,
+        "anomaly_rate": 3.22,
+        "uptime_percent": 100.0
+      },
+      "ACS-003": {
+        "count": 15016,
+        "mean": 40.857,
+        "std": 4.693,
+        "min": 31.592,
+        "max": 78.655,
+        "anomaly_count": 174,
+        "anomaly_rate": 1.16,
+        "uptime_percent": 100.0
+      },
+      "IR-004": {
+        "count": 15014,
+        "mean": 23.566,
+        "std": 3.542,
+        "min": 19.657,
+        "max": 41.613,
+        "anomaly_count": 654,
+        "anomaly_rate": 4.36,
+        "uptime_percent": 100.0
+      }
+    },
+    "kpi_snapshot": {
+      "pressure": {
+        "value": 102.55,
+        "unit": "PSI",
+        "is_anomaly": false,
+        "leak_probability": 0.0
+      },
+      "flow": {
+        "value": 203.76,
+        "unit": "L/min",
+        "is_anomaly": false,
+        "leak_probability": 0.0
+      },
+      "acoustic": {
+        "value": 38.98,
+        "unit": "dB",
+        "is_anomaly": false,
+        "leak_probability": 0.0
+      },
+      "infrared": {
+        "value": 27.59,
+        "unit": "C",
+        "is_anomaly": false,
+        "leak_probability": 0.0
+      },
+      "composite_risk": 0.0,
+      "risk_level": "NOMINAL"
+    }
+  }
+}

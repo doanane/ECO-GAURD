@@ -111,8 +111,9 @@ function PressureGauge({
   const arcPath = (r: number, p1: number, p2: number) => {
     const s = arcPt(r, p1);
     const e = arcPt(r, p2);
-    const large = p2 - p1 > 0.5 ? 1 : 0;
-    return `M ${s.x} ${s.y} A ${r} ${r} 0 ${large} 1 ${e.x} ${e.y}`;
+    // Always use large=0: all gauge arcs are ≤180° so the short clockwise arc is always correct.
+    // large=1 causes the arc to wrap the wrong way when pct > 0.5, breaking the gauge.
+    return `M ${s.x} ${s.y} A ${r} ${r} 0 0 1 ${e.x} ${e.y}`;
   };
 
   // Normal range arc

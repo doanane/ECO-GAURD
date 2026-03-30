@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../context/ThemeContext';
 import { useAlerts } from '../../context/AlertContext';
@@ -46,6 +47,12 @@ function ConnectionBadge() {
 export default function TabLayout() {
   const { colors, resolved } = useTheme();
   const { unacknowledgedCount } = useAlerts();
+  const insets = useSafeAreaInsets();
+
+  // On iOS the home indicator area needs extra bottom space.
+  // We compute this once here so tabBarStyle can use the value.
+  const tabBarBottomPad = Platform.OS === 'web' ? 6 : Math.max(insets.bottom, 4);
+  const tabBarHeight    = Platform.OS === 'web' ? 56 : 50 + tabBarBottomPad;
 
   return (
     <Tabs
@@ -75,9 +82,9 @@ export default function TabLayout() {
           backgroundColor: colors.tabBarBg,
           borderTopColor: colors.border,
           borderTopWidth: 1,
-          height: Platform.OS === 'web' ? 56 : 60,
-          paddingBottom: Platform.OS === 'web' ? 6 : 8,
-          paddingTop: 4,
+          height: tabBarHeight,
+          paddingBottom: tabBarBottomPad,
+          paddingTop: 6,
         },
         tabBarActiveTintColor: colors.cyan,
         tabBarInactiveTintColor: colors.textMuted,

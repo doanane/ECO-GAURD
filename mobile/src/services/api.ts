@@ -30,14 +30,18 @@ function resolveApiUrl(): string {
 
 const client = axios.create({
   baseURL: resolveApiUrl(),
-  timeout: 10000,
+  timeout: 30000,  // 30s — ngrok tunnels can be slow on first request
   headers: { 'Content-Type': 'application/json' },
 });
 
 client.interceptors.response.use(
   (res) => res,
   (err) => {
-    console.error('[API Error]', err?.response?.status, err?.message);
+    const status  = err?.response?.status ?? 'timeout';
+    const message = err?.code === 'ECONNABORTED'
+      ? `Request timed out — backend may be slow or unreachable`
+      : (err?.message ?? 'Unknown error');
+    console.warn('[API]', status, message);
     return Promise.reject(err);
   }
 );

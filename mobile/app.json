@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "EcoGuard",
+    "slug": "ecoguard",
+    "version": "1.0.0",
+    "sdkVersion": "54.0.0",
+    "orientation": "portrait",
+    "scheme": "ecoguard",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#030a12"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ecoguard.pipeline"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#030a12"
+      },
+      "package": "com.ecoguard.pipeline"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-font",
+        {
+          "fonts": []
+        }
+      ]
+    ],
+    "newArchEnabled": true,
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "apiUrl": "http://localhost:8000",
+      "wsUrl": "ws://localhost:8000",
+      "eas": {
+        "projectId": "ecoguard-pipeline"
+      }
+    }
+  }
+}

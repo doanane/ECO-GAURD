@@ -7,8 +7,8 @@
     "start": "expo start --host lan",
     "tunnel": "expo start --tunnel",
     "web": "expo start --web",
-    "android": "expo start --android",
-    "ios": "expo start --ios"
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

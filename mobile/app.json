@@ -18,7 +18,8 @@
       "adaptiveIcon": {
         "backgroundColor": "#030a12"
       },
-      "package": "com.ecoguard.pipeline"
+      "package": "com.ecoguard.pipeline",
+      "ndkVersion": "25.2.9519653"
     },
     "plugins": [
       "expo-router",

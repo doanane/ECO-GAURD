@@ -137,11 +137,12 @@ export default function DashboardScreen() {
   return (
     <ScrollView
       style={[styles.screen, { backgroundColor: colors.bg }]}
-      contentContainerStyle={[styles.content, isWeb && styles.webContent]}
+      contentContainerStyle={[styles.scrollOuter, isWeb && styles.scrollOuterWeb]}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.cyan} />
       }
     >
+      <View style={styles.content}>
       {/* Action Row */}
       <View style={styles.actionRow}>
         <TouchableOpacity style={[styles.simBtn, { borderColor: colors.red + '60', backgroundColor: colors.red + '12' }]} onPress={onSimLeak}>
@@ -289,14 +290,16 @@ export default function DashboardScreen() {
           EcoGuard Technologies  ·  Pipeline Integrity Platform  ·  Sector 7  ·  48 km
         </Text>
       </View>
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1 },
-  content: { padding: 16, paddingBottom: 40 },
-  webContent: { maxWidth: 1400, alignSelf: 'center', width: '100%' },
+  screen:         { flex: 1 },
+  scrollOuter:    { flexGrow: 1 },
+  scrollOuterWeb: { alignItems: 'center' },
+  content:        { padding: 16, paddingBottom: 40, width: '100%', maxWidth: 1400 },
   actionRow: {
     flexDirection: 'row',
     gap: 10,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  ScrollView, View, Text, StyleSheet, TouchableOpacity, RefreshControl, Alert as RNAlert,
+  ScrollView, View, Text, StyleSheet, TouchableOpacity, RefreshControl, Alert as RNAlert, Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SectionHeader } from '../../components/ui/SectionHeader';
@@ -188,9 +188,10 @@ export default function AlertsScreen() {
   return (
     <ScrollView
       style={[styles.screen, { backgroundColor: colors.bg }]}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.scrollOuter, Platform.OS === 'web' && styles.scrollOuterWeb]}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.red} />}
     >
+      <View style={styles.content}>
       {/* Stats Row */}
       <View style={styles.statsRow}>
         <View style={[styles.statCard, { backgroundColor: colors.bgSurface, borderColor: colors.border }]}>
@@ -287,13 +288,16 @@ export default function AlertsScreen() {
           )}
         </View>
       </View>
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen:    { flex: 1 },
-  content:   { padding: 14, paddingBottom: 40, ...(require('react-native').Platform.OS === 'web' ? { maxWidth: 900, alignSelf: 'center' as any, width: '100%' } : {}) },
+  screen:         { flex: 1 },
+  scrollOuter:    { flexGrow: 1 },
+  scrollOuterWeb: { alignItems: 'center' },
+  content:        { padding: 14, paddingBottom: 40, width: '100%', maxWidth: 900 },
   statsRow:  { flexDirection: 'row', gap: 10, marginBottom: 14 },
   statCard:  { flex: 1, borderWidth: 1, borderRadius: 8, padding: 12, alignItems: 'center' },
   statNum:   { fontFamily: 'monospace', fontSize: 22, fontWeight: '900' },

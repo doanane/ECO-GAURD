@@ -145,9 +145,10 @@ export default function PipelineMapScreen() {
   return (
     <ScrollView
       style={[styles.screen, { backgroundColor: colors.bg }]}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.scrollOuter, Platform.OS === 'web' && styles.scrollOuterWeb]}
       refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchTopology} tintColor={colors.teal} />}
     >
+      <View style={styles.content}>
       {/* Stats */}
       <View style={styles.statsRow}>
         {[
@@ -245,13 +246,16 @@ export default function PipelineMapScreen() {
           ))}
         </View>
       </View>
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen:     { flex: 1 },
-  content:    { padding: 14, paddingBottom: 40, ...(Platform.OS === 'web' ? { maxWidth: 960, alignSelf: 'center' as any, width: '100%' } : {}) },
+  screen:         { flex: 1 },
+  scrollOuter:    { flexGrow: 1 },
+  scrollOuterWeb: { alignItems: 'center' },
+  content:        { padding: 14, paddingBottom: 40, width: '100%', maxWidth: 960 },
   statsRow:   { flexDirection: 'row', gap: 10, marginBottom: 14 },
   statCard:   { flex: 1, borderWidth: 1, borderRadius: 8, padding: 12, alignItems: 'center' },
   statNum:    { fontFamily: 'monospace', fontSize: 18, fontWeight: '900' },

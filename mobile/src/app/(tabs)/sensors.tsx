@@ -439,20 +439,24 @@ export default function SensorsScreen() {
   return (
     <ScrollView
       style={[styles.screen, { backgroundColor: colors.bg }]}
-      contentContainerStyle={[styles.content, Platform.OS === 'web' && styles.webContent]}
+      contentContainerStyle={[
+        styles.scrollOuter,
+        Platform.OS === 'web' && styles.scrollOuterWeb,
+      ]}
     >
-      {/* Header row with guide */}
-      <View style={styles.pageHeader}>
-        <View>
-          <Text style={[styles.pageTitle, { color: colors.textPrimary }]}>SENSOR ARRAY</Text>
-          <Text style={[styles.pageSubtitle, { color: colors.textMuted }]}>
-            4 AUTONOMOUS AGENTS  ·  SECTOR 7  ·  48 KM PIPELINE
-          </Text>
+      <View style={styles.content} onLayout={onLayout}>
+        {/* Header row with guide */}
+        <View style={styles.pageHeader}>
+          <View>
+            <Text style={[styles.pageTitle, { color: colors.textPrimary }]}>SENSOR ARRAY</Text>
+            <Text style={[styles.pageSubtitle, { color: colors.textMuted }]}>
+              4 AUTONOMOUS AGENTS  ·  SECTOR 7  ·  48 KM PIPELINE
+            </Text>
+          </View>
+          <DemoGuideButton screenTitle="Sensors" items={SENSORS_GUIDE} />
         </View>
-        <DemoGuideButton screenTitle="Sensors" items={SENSORS_GUIDE} />
-      </View>
 
-      {SENSOR_CONFIG.map((config) => {
+        {SENSOR_CONFIG.map((config) => {
         const reading    = latestReadings[config.id];
         const value      = reading?.value ?? config.nominalMin + (config.nominalMax - config.nominalMin) / 2;
         const history    = readingHistory[config.id] || [];
@@ -473,7 +477,6 @@ export default function SensorsScreen() {
           <View
             key={config.id}
             style={[styles.card, { backgroundColor: colors.bgSurface, borderColor: colors.border }]}
-            onLayout={onLayout}
           >
             {/* Accent border left */}
             <View style={[styles.accentBar, { backgroundColor: config.color }]} />
@@ -586,17 +589,19 @@ export default function SensorsScreen() {
             </View>
           </View>
         );
-      })}
+        })}
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen:      { flex: 1 },
-  content:     { padding: 14, paddingBottom: 40 },
-  webContent:  { maxWidth: 900, alignSelf: 'center', width: '100%' },
+  screen:         { flex: 1 },
+  scrollOuter:    { flexGrow: 1 },
+  scrollOuterWeb: { alignItems: 'center' },
+  content:        { padding: 14, paddingBottom: 40, width: '100%', maxWidth: 900 },
 
-  pageHeader:   { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16 },
+  pageHeader:   { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 },
   pageTitle:    { fontFamily: 'monospace', fontSize: 13, fontWeight: '900', letterSpacing: 2 },
   pageSubtitle: { fontFamily: 'monospace', fontSize: 8, letterSpacing: 1, marginTop: 3 },
 

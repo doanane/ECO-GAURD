@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   ScrollView, View, Text, StyleSheet, TouchableOpacity,
-  RefreshControl, LayoutChangeEvent,
+  RefreshControl, LayoutChangeEvent, Platform,
 } from 'react-native';
 import Svg, { Polyline, Line, Circle as SvgCircle, Text as SvgText, Rect } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
@@ -322,11 +322,12 @@ export default function AnalyticsScreen() {
   return (
     <ScrollView
       style={[styles.screen, { backgroundColor: colors.bg }]}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.scrollOuter, Platform.OS === 'web' && styles.scrollOuterWeb]}
       refreshControl={
         <RefreshControl refreshing={loading} onRefresh={fetchAll} tintColor={colors.magenta} />
       }
     >
+      <View style={styles.content}>
       {/* ── Window selector + Guide ── */}
       <View style={styles.topRow}>
         <View style={styles.windowRow}>
@@ -525,13 +526,16 @@ export default function AnalyticsScreen() {
           </View>
         );
       })}
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen:   { flex: 1 },
-  content:  { padding: 14, paddingBottom: 40 },
+  screen:         { flex: 1 },
+  scrollOuter:    { flexGrow: 1 },
+  scrollOuterWeb: { alignItems: 'center' },
+  content:        { padding: 14, paddingBottom: 40, width: '100%', maxWidth: 960 },
 
   topRow:      { flexDirection: 'row', alignItems: 'center', marginBottom: 10, gap: 8 },
   windowRow:   { flexDirection: 'row', alignItems: 'center', gap: 6, flex: 1, flexWrap: 'wrap' },

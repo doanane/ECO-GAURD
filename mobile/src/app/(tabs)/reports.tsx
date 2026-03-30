@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
+  Platform,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -109,9 +110,10 @@ export default function ReportsScreen() {
   return (
     <ScrollView
       style={[styles.screen, { backgroundColor: colors.bg }]}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.scrollOuter, Platform.OS === 'web' && styles.scrollOuterWeb]}
       refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchData} tintColor={colors.amber} />}
     >
+      <View style={styles.content}>
       {/* Sensor Health */}
       <View style={[styles.card, { backgroundColor: colors.bgSurface, borderColor: colors.border }]}>
         <SectionHeader
@@ -214,13 +216,16 @@ export default function ReportsScreen() {
           )}
         </View>
       </View>
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen:   { flex: 1 },
-  content:  { padding: 14, paddingBottom: 40, ...(require('react-native').Platform.OS === 'web' ? { maxWidth: 900, alignSelf: 'center' as any, width: '100%' } : {}) },
+  screen:         { flex: 1 },
+  scrollOuter:    { flexGrow: 1 },
+  scrollOuterWeb: { alignItems: 'center' },
+  content:        { padding: 14, paddingBottom: 40, width: '100%', maxWidth: 900 },
   card:     { borderWidth: 1, borderRadius: 10, overflow: 'hidden', marginBottom: 14 },
   cardBody: { padding: 14 },
 

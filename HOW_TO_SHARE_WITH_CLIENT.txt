@@ -1,0 +1,188 @@
+=========================================================
+  ECOGUARD — HOW TO SHARE WITH CLIENT (Step by Step)
+=========================================================
+
+IMPORTANT NOTES BEFORE YOU START:
+- You need 3 separate Command Prompt windows open at the same time
+- Do NOT close any window while the client is using the app
+- ngrok gives a NEW URL every time you restart it (free plan)
+- Every time you restart, you must update .env.local with the new URL
+
+=========================================================
+STEP 1 — Open Command Prompt (do this 3 times)
+=========================================================
+
+Press: Windows key → type "cmd" → press Enter
+Do this 3 times so you have 3 separate cmd windows open.
+Label them in your head: Window 1, Window 2, Window 3.
+
+
+=========================================================
+STEP 2 — Window 1: Start the Backend
+=========================================================
+
+Paste this into Window 1 and press Enter:
+
+  cd C:\Users\hp\OneDrive\Desktop\projects\ECOGUARD\backend
+  python main.py
+
+You should see:
+  INFO: Uvicorn running on http://0.0.0.0:8000
+  INFO: 4 sensor agents started
+
+Leave Window 1 open. DO NOT close it.
+
+
+=========================================================
+STEP 3 — Window 2: Start ngrok
+=========================================================
+
+Paste this into Window 2 and press Enter:
+
+  C:\Users\hp\Downloads\ngrok-v3-stable-windows-amd64\ngrok.exe http 8000
+
+You will see something like:
+  Forwarding   https://abc123xyz.ngrok-free.app -> localhost:8000
+
+COPY THAT URL (the https://....ngrok-free.app part).
+You will need it in the next step.
+
+Leave Window 2 open. DO NOT close it.
+
+
+=========================================================
+STEP 4 — Update the app URL (do this EVERY time ngrok restarts)
+=========================================================
+
+Open this file in Notepad:
+  C:\Users\hp\OneDrive\Desktop\projects\ECOGUARD\mobile\.env.local
+
+Change BOTH lines to your new ngrok URL:
+
+  EXPO_PUBLIC_API_URL=https://PASTE-YOUR-NGROK-URL-HERE
+  EXPO_PUBLIC_WS_URL=wss://PASTE-YOUR-NGROK-URL-HERE/ws
+
+Example (your URL will be different):
+  EXPO_PUBLIC_API_URL=https://abc123xyz.ngrok-free.app
+  EXPO_PUBLIC_WS_URL=wss://abc123xyz.ngrok-free.app/ws
+
+Save the file (Ctrl+S).
+
+
+=========================================================
+STEP 5 — Window 3: Start the Mobile App
+=========================================================
+
+Paste this into Window 3 and press Enter:
+
+  cd C:\Users\hp\OneDrive\Desktop\projects\ECOGUARD\mobile
+  npx expo start --tunnel
+
+Wait about 30 seconds. You will see:
+  - A QR code drawn in the terminal
+  - A line saying: Metro waiting on exp://...
+
+Leave Window 3 open. DO NOT close it.
+
+
+=========================================================
+STEP 6 — Share with Client
+=========================================================
+
+---- FOR ANDROID OR IPHONE CLIENT ----
+
+1. Tell your client to install "Expo Go" app:
+   - Android: Play Store → search "Expo Go" → install
+   - iPhone:  App Store → search "Expo Go" → install
+
+2. Take a screenshot of the QR code shown in Window 3
+   (just screenshot your screen)
+
+3. Send that screenshot to your client via WhatsApp or email
+
+4. Client opens Expo Go app → taps "Scan QR Code" → scans it
+   App loads on their phone. Done.
+
+
+---- FOR WEB BROWSER CLIENT (laptop/PC, no install needed) ----
+
+1. In Window 3, press the letter:  w
+   (just type w and press Enter)
+
+2. A browser will open on YOUR computer showing the app.
+   Copy the URL from your browser address bar.
+   It will look like: https://abc123.ngrok.io/--/dashboard
+
+3. Send that URL to your client.
+   They open it in Chrome or Edge on their laptop.
+   No install needed.
+
+
+=========================================================
+TROUBLESHOOTING
+=========================================================
+
+PROBLEM: ngrok says "session limit reached"
+FIX: You can only have 1 ngrok tunnel at a time on free plan.
+     If ngrok is already running somewhere, close that window first,
+     then run ngrok again in Window 2.
+
+PROBLEM: App shows "OFFLINE" or no data
+FIX: Check that Window 1 (backend) and Window 2 (ngrok) are still open.
+     Check that .env.local has the correct ngrok URL.
+     Restart Expo in Window 3: press Ctrl+C then run npx expo start --tunnel again.
+
+PROBLEM: ngrok URL changed (you restarted ngrok)
+FIX: Repeat Step 4 with the new URL.
+     Then in Window 3: press Ctrl+C, then run npx expo start --tunnel again.
+
+PROBLEM: Client scans QR but gets error loading
+FIX: Make sure backend is running (Window 1).
+     Make sure ngrok is running (Window 2).
+     Make sure .env.local has been updated with ngrok URL.
+
+PROBLEM: ngrok is not recognized in normal cmd
+FIX: Use the full path. Instead of just "ngrok http 8000", type:
+     C:\Users\hp\Downloads\ngrok-v3-stable-windows-amd64\ngrok.exe http 8000
+
+PROBLEM: Port 8000 already in use
+FIX: Run this to kill it:
+     taskkill /F /IM python.exe
+     Then start backend again.
+
+
+=========================================================
+QUICK REFERENCE — Commands to copy-paste
+=========================================================
+
+Window 1 (Backend):
+  cd C:\Users\hp\OneDrive\Desktop\projects\ECOGUARD\backend
+  python main.py
+
+Window 2 (ngrok):
+  C:\Users\hp\Downloads\ngrok-v3-stable-windows-amd64\ngrok.exe http 8000
+
+Window 3 (Expo):
+  cd C:\Users\hp\OneDrive\Desktop\projects\ECOGUARD\mobile
+  npx expo start --tunnel
+
+File to update each time ngrok restarts:
+  C:\Users\hp\OneDrive\Desktop\projects\ECOGUARD\mobile\.env.local
+
+
+=========================================================
+OPTIONAL — Add ngrok to PATH so you can just type "ngrok"
+=========================================================
+
+This is a one-time fix so you never have to type the full path again:
+
+1. Press Windows key, type "environment variables", press Enter
+2. Click "Environment Variables" button
+3. Under "System variables", find "Path" and double-click it
+4. Click "New"
+5. Paste: C:\Users\hp\Downloads\ngrok-v3-stable-windows-amd64
+6. Click OK on all windows
+7. Close all cmd windows and reopen them
+8. Now you can just type: ngrok http 8000
+
+=========================================================

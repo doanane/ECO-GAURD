@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { Alert as AlertModel } from '../types/alert';
 import { useWebSocket } from './WebSocketContext';
+import { useAlertSound } from '../hooks/useAlertSound';
 import api from '../services/api';
 
 interface AlertContextValue {
@@ -12,6 +13,7 @@ interface AlertContextValue {
   acknowledgeAlert: (id: number) => Promise<void>;
   resolveAlert: (id: number, action: string) => Promise<void>;
   refresh: () => void;
+  testAlertSound: () => void;
 }
 
 const AlertContext = createContext<AlertContextValue>({
@@ -23,10 +25,12 @@ const AlertContext = createContext<AlertContextValue>({
   acknowledgeAlert: async () => {},
   resolveAlert: async () => {},
   refresh: () => {},
+  testAlertSound: () => {},
 });
 
 export function AlertProvider({ children }: { children: React.ReactNode }) {
   const { client } = useWebSocket();
+  const { playAlertSound } = useAlertSound();
   const [activeAlerts, setActiveAlerts] = useState<AlertModel[]>([]);
   const [allAlerts, setAllAlerts] = useState<AlertModel[]>([]);
 
@@ -51,6 +55,11 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const handleAlert = (payload: AlertModel) => {
+      // Play alert sound for every new CRITICAL alert
+      if (payload.severity === 'CRITICAL') {
+        playAlertSound();
+      }
+
       setActiveAlerts((prev) => {
         const exists = prev.find((a) => a.id === payload.id);
         if (exists) return prev;
@@ -65,7 +74,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
 
     client.on('alert', handleAlert);
     return () => client.off('alert', handleAlert);
-  }, [client]);
+  }, [client, playAlertSound]);
 
   const acknowledgeAlert = useCallback(async (id: number) => {
     try {
@@ -102,6 +111,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
         acknowledgeAlert,
         resolveAlert,
         refresh: fetchAlerts,
+        testAlertSound: playAlertSound,
       }}
     >
       {children}

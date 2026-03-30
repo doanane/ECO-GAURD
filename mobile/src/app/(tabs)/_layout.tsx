@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../context/ThemeContext';
@@ -32,14 +32,34 @@ function ConnectionBadge() {
   const { connectionState } = useWebSocket();
   const { colors } = useTheme();
   const isConnected = connectionState === 'connected';
+  const isReconnecting = connectionState === 'reconnecting';
   const color = isConnected ? colors.green : colors.red;
+  // Shorten label so it never overlaps the title on narrow screens
+  const label = isConnected ? 'LIVE' : isReconnecting ? 'SYNC' : 'OFF';
 
   return (
-    <View style={styles.connBadge}>
-      <LiveIndicator color={color} size={7} />
-      <Text style={[styles.connText, { color }]}>
-        {isConnected ? 'LIVE' : connectionState === 'reconnecting' ? 'RECONNECTING' : 'OFFLINE'}
-      </Text>
+    <View style={[styles.connBadge, { borderColor: color + '40', backgroundColor: color + '12' }]}>
+      <LiveIndicator color={color} size={6} />
+      <Text style={[styles.connText, { color }]}>{label}</Text>
+    </View>
+  );
+}
+
+function HeaderLeft({ title, colors }: { title: string; colors: any }) {
+  const isDashboard = title === 'DASHBOARD';
+  return (
+    <View style={styles.headerLeft}>
+      <Image
+        source={require('../../assets/image.png')}
+        style={styles.logoImg}
+        resizeMode="contain"
+      />
+      <View style={styles.headerTitleBlock}>
+        <Text style={[styles.headerAppName, { color: colors.cyan }]}>ECOGUARD</Text>
+        {!isDashboard && (
+          <Text style={[styles.headerPageName, { color: colors.textMuted }]}>{title}</Text>
+        )}
+      </View>
     </View>
   );
 }
@@ -56,7 +76,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      screenOptions={{
+      screenOptions={({ route }) => ({
         headerShown: true,
         headerStyle: {
           backgroundColor: colors.headerBg,
@@ -65,13 +85,14 @@ export default function TabLayout() {
           elevation: 0,
           shadowOpacity: 0,
         } as any,
-        headerTitleStyle: {
-          fontFamily: Platform.OS === 'web' ? 'monospace' : 'monospace',
-          fontSize: 13,
-          letterSpacing: 3,
-          color: colors.cyan,
-          fontWeight: '700',
-        },
+        // Hide the default centered title — we render our own in headerLeft
+        headerTitle: () => null,
+        headerLeft: () => (
+          <HeaderLeft
+            title={route.name.replace(/-/g, ' ').toUpperCase()}
+            colors={colors}
+          />
+        ),
         headerRight: () => (
           <View style={styles.headerRight}>
             <ConnectionBadge />
@@ -98,7 +119,7 @@ export default function TabLayout() {
         tabBarIconStyle: {
           marginBottom: 0,
         },
-      }}
+      })}
     >
       <Tabs.Screen
         name="dashboard"
@@ -180,25 +201,57 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
-  headerRight: {
+  // ── Header left: logo + app/page name ──────────────────────────────
+  headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginRight: 14,
+    marginLeft: 14,
+  },
+  logoImg: {
+    width: 32,
+    height: 32,
+    borderRadius: 6,
+  },
+  headerTitleBlock: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  headerAppName: {
+    fontFamily: 'monospace',
+    fontSize: 12,
+    fontWeight: '900',
+    letterSpacing: 2.5,
+    lineHeight: 14,
+  },
+  headerPageName: {
+    fontFamily: 'monospace',
+    fontSize: 8,
+    letterSpacing: 1.5,
+    lineHeight: 11,
+    marginTop: 1,
+  },
+
+  // ── Header right ───────────────────────────────────────────────────
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginRight: 12,
   },
   connBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 8,
+    gap: 4,
+    paddingHorizontal: 7,
     paddingVertical: 4,
-    borderRadius: 12,
-    backgroundColor: 'rgba(0,0,0,0.1)',
+    borderRadius: 10,
+    borderWidth: 1,
   },
   connText: {
     fontFamily: 'monospace',
-    fontSize: 9,
-    letterSpacing: 1,
+    fontSize: 8,
+    letterSpacing: 0.8,
     fontWeight: '700',
   },
   themeBtn: {

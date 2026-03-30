@@ -13,6 +13,7 @@ import { SectionHeader } from '../../components/ui/SectionHeader';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { LiveIndicator } from '../../components/ui/LiveIndicator';
 import { useSensorData } from '../../context/SensorDataContext';
+import { useAlerts } from '../../context/AlertContext';
 import { getStatusFromValue } from '../../constants/thresholds';
 import { DemoGuideButton, GuideItem } from '../../components/ui/DemoGuide';
 import api from '../../services/api';
@@ -90,6 +91,7 @@ const DASHBOARD_GUIDE: GuideItem[] = [
 export default function DashboardScreen() {
   const { colors } = useTheme();
   const { latestReadings, leakRiskPercent, riskLevel, refresh } = useSensorData();
+  const { testAlertSound } = useAlerts();
   const [refreshing, setRefreshing] = useState(false);
 
   const pressure = latestReadings['PS-001'];
@@ -143,16 +145,32 @@ export default function DashboardScreen() {
       }
     >
       <View style={styles.content}>
-      {/* Action Row */}
+      {/* Action Row — compact pill buttons */}
       <View style={styles.actionRow}>
-        <TouchableOpacity style={[styles.simBtn, { borderColor: colors.red + '60', backgroundColor: colors.red + '12' }]} onPress={onSimLeak}>
-          <Ionicons name="warning-outline" size={14} color={colors.red} />
-          <Text style={[styles.simBtnText, { color: colors.red }]}>SIMULATE LEAK</Text>
+        <TouchableOpacity
+          style={[styles.actionBtn, { borderColor: colors.red + '60', backgroundColor: colors.red + '12' }]}
+          onPress={onSimLeak}
+        >
+          <Ionicons name="warning-outline" size={12} color={colors.red} />
+          <Text style={[styles.actionBtnText, { color: colors.red }]}>SIM LEAK</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.rstBtn, { borderColor: colors.border, backgroundColor: colors.bgSurface2 }]} onPress={onReset}>
-          <Ionicons name="refresh-outline" size={14} color={colors.textSecondary} />
-          <Text style={[styles.rstBtnText, { color: colors.textSecondary }]}>RESET SYSTEM</Text>
+
+        <TouchableOpacity
+          style={[styles.actionBtn, { borderColor: colors.border, backgroundColor: colors.bgSurface2 }]}
+          onPress={onReset}
+        >
+          <Ionicons name="refresh-outline" size={12} color={colors.textSecondary} />
+          <Text style={[styles.actionBtnText, { color: colors.textSecondary }]}>RESET</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.actionBtn, { borderColor: colors.amber + '60', backgroundColor: colors.amber + '10' }]}
+          onPress={testAlertSound}
+        >
+          <Ionicons name="volume-high-outline" size={12} color={colors.amber} />
+          <Text style={[styles.actionBtnText, { color: colors.amber }]}>SOUND</Text>
+        </TouchableOpacity>
+
         <DemoGuideButton screenTitle="Dashboard" items={DASHBOARD_GUIDE} />
       </View>
 
@@ -302,40 +320,25 @@ const styles = StyleSheet.create({
   content:        { padding: 16, paddingBottom: 40, width: '100%', maxWidth: 1400 },
   actionRow: {
     flexDirection: 'row',
-    gap: 10,
+    flexWrap: 'wrap',
+    gap: 7,
     marginBottom: 14,
+    alignItems: 'center',
   },
-  simBtn: {
-    flex: 1,
+  actionBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    padding: 11,
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 7,
   },
-  simBtnText: {
+  actionBtnText: {
     fontFamily: 'monospace',
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: '700',
-    letterSpacing: 1.5,
-  },
-  rstBtn: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    padding: 11,
-    borderWidth: 1,
-    borderRadius: 8,
-  },
-  rstBtnText: {
-    fontFamily: 'monospace',
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 1.5,
+    letterSpacing: 1,
   },
   kpiGrid: { marginBottom: 14 },
   kpiGridWeb: {},

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
+  Linking,
   Platform,
   RefreshControl,
   ScrollView,
@@ -198,6 +199,7 @@ export default function ReportsScreen() {
           ) : (
             reports.map((r) => {
               const rColor = reportTypeColors[r.report_type] ?? colors.cyan;
+              const downloadUrl = api.getReportDownloadUrl(r.id);
               return (
                 <View key={String(r.id)} style={[styles.reportRow, { borderBottomColor: colors.border }]}>
                   <View style={[styles.reportTypeTag, { backgroundColor: rColor + '12', borderColor: rColor + '40' }]}>
@@ -209,7 +211,14 @@ export default function ReportsScreen() {
                     </Text>
                     <Text style={[styles.reportDate, { color: colors.textMuted }]}>{formatDate(r.generated_at)}</Text>
                   </View>
-                  <StatusBadge status="INFO" label="JSON" small />
+                  <TouchableOpacity
+                    style={[styles.viewBtn, { borderColor: rColor + '60', backgroundColor: rColor + '10' }]}
+                    onPress={() => Linking.openURL(downloadUrl)}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons name="download-outline" size={11} color={rColor} />
+                    <Text style={[styles.viewBtnText, { color: rColor }]}>VIEW</Text>
+                  </TouchableOpacity>
                 </View>
               );
             })
@@ -255,6 +264,8 @@ const styles = StyleSheet.create({
   reportLeft:     { flex: 1 },
   reportTitle:    { fontFamily: 'monospace', fontSize: 10, fontWeight: '600', marginBottom: 2 },
   reportDate:     { fontFamily: 'monospace', fontSize: 8 },
+  viewBtn:        { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 9, paddingVertical: 6, borderRadius: 7, borderWidth: 1 },
+  viewBtnText:    { fontFamily: 'monospace', fontSize: 8, fontWeight: '700', letterSpacing: 0.8 },
 
   subtleLabel:  { fontFamily: 'monospace', fontSize: 7, letterSpacing: 0.5 },
   emptyLabel:   { fontFamily: 'monospace', fontSize: 9, textAlign: 'center', paddingVertical: 12, lineHeight: 14 },

@@ -90,6 +90,7 @@ export const api = {
   generateReport:   (reportType: string, hours = 24) =>
     client.post('/api/reports/generate', { report_type: reportType, hours }).then((r) => r.data),
   getSensorHealth:  () => client.get('/api/reports/sensor-health').then((r) => r.data),
+  getReportDownloadUrl: (reportId: number) => `${resolveApiUrl()}/api/reports/${reportId}/download`,
 
   getHealth: () => client.get('/health').then((r) => r.data),
 };
